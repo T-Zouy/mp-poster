@@ -1,0 +1,140 @@
+.form-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  padding: 25px 17px 70px;
+  background: @body-color;
+  .submit-title-edit, .submit-button-edit, .submit-body-item {
+    position: relative;
+  }
+  .submit-title-edit {
+    padding: 20px 16px;
+    text-align: center;
+    font-size: 22px;
+    color: @theme-color;
+  }
+  .submit-body-edit {
+    margin: 20px 0 14px 0;
+    .submit-body-item {
+      width: 285px;
+      height: 40px;
+      margin: 0 auto;
+      background: @form-body-color;
+      border: none;
+      &:first-of-type {
+        border-radius: 8px 8px 0 0;
+      }
+      &:last-of-type {
+      border-radius: 0 0 8px 8px;
+      }
+      &:last-of-type .submit-body-item-content {
+        border: none;
+      }
+      .submit-body-item-content {
+        display: flex;
+        align-items: center;
+        height: 38px;
+        margin: 0 14px;
+        border-bottom: 1px solid @border-color;
+        label, input {
+          font-size: 15px;
+        }
+        label {
+          width: 70px;
+          color: @label-color;
+        }
+        input {
+          flex: 1;
+          padding-left: 5px;
+          color: #B2B2B2;
+          font-weight: 300;
+        }
+      }
+    }
+    .hasAllRadius {
+      border-radius: 8px !important;
+    }
+  }
+  .submit-body-add {
+    margin-bottom: 20px;
+    text-align: center;
+    i {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background: url('../img/add.png') left center no-repeat;
+      background-size: 16px 16px;
+    }
+  }
+  .submit-button-edit {
+    .submit-button {
+      margin: @button-top 30px;
+      height: 40px;
+      width: 285px;
+      line-height: 40px;
+      color: @theme-color;
+      background: @btn-color;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 300;
+    }
+  }
+  .form-edit-footer {
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 46px;
+    line-height: 46px;
+    background: #fff;
+    text-align: center;
+    span {
+      font-size: 16px;
+      color: #3FD36C;
+    }
+    .cancle, .save {
+      position: absolute;
+      top: 50%;
+      margin-top: -10px;
+      width: 20px;
+      height: 20px;
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 14px 14px;
+    }
+    .cancle {
+      left: 14px;
+      background-image: url('../img/false.png');
+    }
+    .save {
+      right: 14px;
+      background-image: url('../img/true.png');
+    }
+  }
+  .edit-icon, .edit-icon-body, .delete-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    width: 16px;
+    height: 16px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+  }
+  .edit-icon {
+    background-image: url('../img/form-edit.png');
+    right: 0;
+  }
+  .edit-icon-body {
+    background-image: url('../img/form-edit.png');
+    right: -28px;
+  }
+  .delete-icon {
+    background-image: url('../img/delete.png');
+    left: -28px;
+  }
+}

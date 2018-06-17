@@ -1,0 +1,25 @@
+body {
+  font-family: "PingFang SC","helvetica neue",helvetica,STHeiTi,roboto,"droid sans",arial;
+}
+
+@font-face {
+  font-family: 'iconfont';  /* project id 670970 */
+  src: url('https://at.alicdn.com/t/font_670970_6uxbtluwamo8yqfr.ttf') format('truetype');
+}
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dengbisuofang:before{content: '\e64b'}
+.icon-cao-flat-Arrow:before{content: '\e618'}
+.icon-chacha:before {content: '\e646';}
+.icon-xiaogougou:before {content: '\e625';}
+.icon-zujian:before {content: '\e636';}
+.icon-xinxi:before {content: '\e635';}
+.icon-baocun:before {content: '\e634';}
+.icon-beijing:before {content: '\e633';}

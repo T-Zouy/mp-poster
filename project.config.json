@@ -1,0 +1,43 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"miniprogramRoot": "./dist/",
+	"compileType": "miniprogram",
+	"appid": "wx3497fff85f93b4e3",
+	"projectname": "weapp-hcy-poster",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": -1,
+					"name": "启动页",
+					"pathName": "pages/create/templates",
+					"query": ""
+				}
+			]
+		}
+	}
+}
