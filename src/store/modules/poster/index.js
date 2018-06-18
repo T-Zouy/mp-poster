@@ -87,6 +87,7 @@ const actions = {
   async getPosterTemplate ({ commit, state }, id = 1) {
     let res = await posterApi.getPosterDetail(id)
     if (res.status.code === 0) {
+      commit('initPoster')
       commit('setPosterModules', res.data)
       console.log(res.status.msg)
     } else {
@@ -109,6 +110,26 @@ const actions = {
   addModule ({ commit, state }, { type, module }) {
     console.log(type, module)
     commit('addModule', { type, module })
+  },
+  // 新增logoModules
+  addLogoModules ({commit, state}, {type, path, width, height}) {
+    if (state.editModule.type === type) {
+      commit('changeSource', {...state.editModule}, path)
+    } else {
+      let module = {
+        src: path,
+        disable: true,
+        style: {
+          top: 1,
+          left: 1,
+          width: width,
+          height: height,
+          scale: 1,
+          opacity: 1
+        }
+      }
+      commit('addModule', {type, module})
+    }
   }
 }
 
@@ -134,7 +155,8 @@ const mutations = {
     state.textModules = []
     state.imageModules = []
     state.logoModules = []
-    this.initEditStatus()
+    state.editModule.type = ''
+    state.editModule.index = -1
   },
   // 设置state内的数据
   setPosterModules (state, poster) {
@@ -207,6 +229,11 @@ const mutations = {
     }
     console.log(temp)
     state.posterModules[type].push(temp)
+    state.editModule = {
+      type,
+      index: state.posterModules[type].length - 1
+    }
+    console.log(state.editModule)
   }
 }
 

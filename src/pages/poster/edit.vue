@@ -4,9 +4,9 @@
       <!--背景-->
       <img class="bg-img" :src="bgUrl" alt=""
            @click="deselectAll">
-      <!--二维码组件-->
+      <!--logo组件-->
       <v-logo v-for="(logoModule, index) in logoModules" :key="index"
-              :styles="logoModule.content.style" :qrCodeUrl="qrCodeUrl"
+              :styles="logoModule.content.style" :src="logoModule.content.src"
               :disable="logoModule.content.disable" :index="index"
               @select="selectModule"></v-logo>
       <!--文本组件-->
@@ -282,6 +282,7 @@
   }
   .icon-chacha, .icon-dengbisuofang {
     position: absolute;
+    z-index: 100;
     width: 15px;
     height: 15px;
     border-radius: 100%;

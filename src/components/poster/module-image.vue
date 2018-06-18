@@ -108,13 +108,11 @@
 <style scoped>
   .image {
     position: absolute;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
     box-sizing: border-box;
   }
 
   .module-selected {
+    z-index: 99;
     border: 1px dashed #3FD36C;
   }
 

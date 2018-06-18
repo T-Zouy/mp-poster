@@ -1,5 +1,6 @@
 <template>
-  <div class="module-logo" :class="[{'module-selected': disable}, calClass]"
+  <img class="module-logo" :class="[{'module-selected': disable}, calClass]"
+       :src="src" alt=""
        :style="{
           top: styles.top + 'px',
           left: styles.left + 'px',
@@ -9,9 +10,7 @@
         }" @click="handleClick"
        @touchstart="startMoveModule"
        @touchmove="moveModule"
-       @touchend="endMoveModule">
-    <img :src="qrCodeUrl" alt="">
-  </div>
+       @touchend="endMoveModule" />
 </template>
 
 <script>
@@ -30,7 +29,7 @@
           scale: 1
         })
       },
-      qrCodeUrl: {
+      src: {
         type: String,
         default: 'http://img0.imgtn.bdimg.com/it/u=635704053,1460945271&fm=27&gp=0.jpg'
       },
@@ -69,7 +68,7 @@
       }),
       handleClick () {
         if (!this.disable) {
-          this.$emit('select', {type: 'logoModules', index: 0})
+          this.$emit('select', {type: 'logoModules', index: this.index})
           return false
         }
       },
@@ -89,7 +88,7 @@
         let distanceY = this.end.y - this.start.y
         let tempTop = distanceY + this.styles.top
         let tempLeft = distanceX + this.styles.left
-        this.changeStyles({type: 'logoModules', index: 0, styles: {top: tempTop, left: tempLeft}})
+        this.changeStyles({type: 'logoModules', index: this.index, styles: {top: tempTop, left: tempLeft}})
         this.start.x = event.clientX
         this.start.y = event.clientY
       },
@@ -106,14 +105,11 @@
 <style lang="less" scoped>
   .module-logo {
     position: absolute;
-    overflow: hidden;
-    img {
-      width: 100%;
-    }
+    box-sizing: border-box;
   }
 
   .module-selected {
-    box-sizing: border-box;
     border: 1px dashed #3FD36C;
+    z-index: 99;
   }
 </style>
