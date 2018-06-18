@@ -84,7 +84,7 @@ const getters = {
 // actions
 const actions = {
   // 获取海报模板数据
-  async getPosterTemplate ({ commit, state }, id = 1) {
+  async getPosterTemplate ({commit, state}, id = 1) {
     let res = await posterApi.getPosterDetail(id)
     if (res.status.code === 0) {
       commit('initPoster')
@@ -95,21 +95,22 @@ const actions = {
     }
   },
   // 选中需要编辑的组件
-  selectModule ({ commit, state }, { type, index }) {
-    console.log(type, index)
+  selectModule ({commit, state}, {type, index}) {
     commit('deselectAll')
     commit('setFooterStatus', type)
-    commit('enableModule', { type, index })
-    commit('setEditStatus', { type, index })
+    commit('enableModule', {type, index})
+    commit('setEditStatus', {type, index})
   },
   // 删除组件
   deleteModule ({commit}) {
     commit('deleteModule')
+    commit('setFooterStatus')
+    commit('initEditStatus')
   },
   // 新增组件
-  addModule ({ commit, state }, { type, module }) {
+  addModule ({commit, state}, {type, module}) {
     console.log(type, module)
-    commit('addModule', { type, module })
+    commit('addModule', {type, module})
   },
   // 新增logoModules
   addLogoModules ({commit, state}, {type, path, width, height}) {
@@ -130,6 +131,15 @@ const actions = {
       }
       commit('addModule', {type, module})
     }
+  },
+  // 编辑保存
+  saveEdit ({commit}) {
+    commit('deselectAll')
+  },
+  // 取消编辑状态
+  cancelSaveEdit ({commit}, {type, index, styles}) {
+    commit('deselectAll')
+    commit('changeStyles', {type, index, styles})
   }
 }
 
@@ -141,7 +151,7 @@ const mutations = {
     state.editModule.index = -1
   },
   // 设置编辑状态
-  setEditStatus (state, { type, index }) {
+  setEditStatus (state, {type, index}) {
     state.editModule = {
       type: type,
       index: index
@@ -189,14 +199,14 @@ const mutations = {
     state.posterModules.logoModules = deselectModule(state.posterModules.logoModules)
   },
   // 选中组件
-  enableModule (state, { type, index }) {
+  enableModule (state, {type, index}) {
     console.log(type, index)
     state.editModule.type = type
     state.editModule.index = index
     state.posterModules[type][index].content.disable = true
   },
   // 修改样式
-  changeStyles (state, { type, index, styles }) {
+  changeStyles (state, {type, index, styles}) {
     console.log(type, index, styles)
     state.posterModules[type][index]['content']['style'] = {
       ...state.posterModules[type][index]['content']['style'],
@@ -204,7 +214,7 @@ const mutations = {
     }
   },
   // 修改文本内容或者图片地址
-  changeSource (state, { type, index }, src) {
+  changeSource (state, {type, index}, src) {
     console.log(type, index, src)
     if (type === 'textModules') {
       state.posterModules[type][index]['content']['text'] = src
@@ -215,14 +225,14 @@ const mutations = {
   // 删除组件
   deleteModule (state) {
     try {
-      const {type, index} = state.editModule
-      state.posterModules[type].splice(index, 1)
+      console.log(state.editModule)
+      state.posterModules[state.editModule.type].splice(state.editModule.index, 1)
     } catch (e) {
       console.log(e)
     }
   },
   // 新增组件
-  addModule (state, { type, module }) {
+  addModule (state, {type, module}) {
     let temp = {
       type: MODULE_TYPE[type],
       content: module

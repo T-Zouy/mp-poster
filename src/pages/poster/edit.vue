@@ -13,16 +13,16 @@
       <v-text v-for="(textModule, index) in textModules" :key="index"
               :styles="textModule.content.style" :text="textModule.content.text"
               :disable="textModule.content.disable" :index="index"
-              @select="selectModule" @delete="deleteModule"></v-text>
+              @select="selectModule"></v-text>
       <!--图片组件-->
       <v-image v-for="(imageModule, index) in imageModules" :key="index"
                :styles="imageModule.content.style" :src="imageModule.content.src"
                :disable="imageModule.content.disable" :index="index"
-               @select="selectModule" @delete="deleteModule"></v-image>
+               @select="selectModule"></v-image>
       <i v-show="isShowEdit" class="delete iconfont icon-chacha"
               :style="{left: deleteBtnStyle.left + 'px',
                        top: deleteBtnStyle.top + 'px'}"
-              @click="handleDelete"></i>
+              @click="deleteModule"></i>
       <i v-show="isShowEdit" class="scale iconfont icon-dengbisuofang"
               :style="{left: scaleBtnStyle.left + 'px',
                        top: scaleBtnStyle.top + 'px'}"
@@ -32,6 +32,7 @@
     </div>
     <div>
       <v-text-edit v-if="footerStatus === 'textModules'"></v-text-edit>
+      <v-logo-edit v-else-if="footerStatus === 'logoModules'"></v-logo-edit>
       <v-edit-footer v-else @edit="btnEdit"></v-edit-footer>
     </div>
   </div>
@@ -40,6 +41,7 @@
 <script>
   import EditFooter from '../../components/footer/edit-footer'
   import TextEditFooter from '../../components/footer/text-edit-footer'
+  import LogoEditFooter from '../../components/footer/logo-edit-footer.vue'
   import ModuleText from '../../components/poster/module-text'
   import ModuleImage from '../../components/poster/module-image'
   import ModuleLogo from '../../components/poster/module-logo'
@@ -140,6 +142,7 @@
     components: {
       'v-edit-footer': EditFooter,
       'v-text-edit': TextEditFooter,
+      'v-logo-edit': LogoEditFooter,
       'v-text': ModuleText,
       'v-image': ModuleImage,
       'v-logo': ModuleLogo

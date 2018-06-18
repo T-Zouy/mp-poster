@@ -38,19 +38,19 @@
       </div>
     </div>
     <div class="bottom-part">
-      <i class="cancel iconfont icon-chacha"></i>
+      <i class="cancel iconfont icon-chacha" @click="handleCancelSave"></i>
       <div class="edit-container">
         <div class="style" :class="{active: textEditType === 'style'}" @click="handleEdit('style')">样式</div>
         <div class="color" :class="{active: textEditType === 'color'}" @click="handleEdit('color')">颜色</div>
         <div class="edit" :class="{active: textEditType === 'edit'}" @click="handleEdit('edit')">编辑</div>
       </div>
-      <i class="confirm iconfont icon-xiaogougou"></i>
+      <i class="confirm iconfont icon-xiaogougou" @click="handleSave"></i>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
 
   export default {
     name: 'text-edit-footer',
@@ -86,6 +86,16 @@
       ...mapMutations({
         changeStyles: 'changeStyles'
       }),
+      ...mapActions([
+        'saveEdit',
+        'cancelSaveEdit'
+      ]),
+      handleSave () {
+        this.saveEdit()
+      },
+      handleCancelSave () {
+        this.cancelSaveEdit({type: this.type, index: this.index, styles: this.styles})
+      },
       updatePoster () {
         let temp = this.getEditModule()
         console.log(temp)
@@ -98,37 +108,37 @@
         console.log(this.textEditType)
       },
       handleChangeStyles (styles) {
-        this.changeStyles({ type: this.type, index: this.index, styles: styles })
+        this.changeStyles({type: this.type, index: this.index, styles: styles})
       },
       changeFontWeight (event) {
         console.log(event)
         if (event.target.value) {
-          this.handleChangeStyles({ fontWeight: 'bold' })
+          this.handleChangeStyles({fontWeight: 'bold'})
         } else {
-          this.handleChangeStyles({ fontWeight: 'none' })
+          this.handleChangeStyles({fontWeight: 'none'})
         }
       },
       changeTextDecoration (event) {
         console.log(event)
         if (event.target.value) {
-          this.handleChangeStyles({ textDecoration: 'underline' })
+          this.handleChangeStyles({textDecoration: 'underline'})
         } else {
-          this.handleChangeStyles({ textDecoration: 'none' })
+          this.handleChangeStyles({textDecoration: 'none'})
         }
       },
       changeTextShadow (event) {
         console.log(event)
         if (event.target.value) {
-          this.handleChangeStyles({ textShadow: '0 2px 1px 0 #ff0000' })
+          this.handleChangeStyles({textShadow: '0 2px 1px 0 #ff0000'})
         } else {
-          this.handleChangeStyles({ textShadow: 'none' })
+          this.handleChangeStyles({textShadow: 'none'})
         }
       },
       handleChangeOpacity (event) {
         console.log(event)
         let temp = (100 - event.target.value) / 100
         this.styles.opacity = temp
-        this.handleChangeStyles({ opacity: temp })
+        this.handleChangeStyles({opacity: temp})
       }
     }
   }
