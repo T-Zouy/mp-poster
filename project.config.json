@@ -34,8 +34,7 @@
 				{
 					"id": -1,
 					"name": "启动页",
-					"pathName": "pages/create/templates",
-					"query": ""
+					"pathName": "pages/create/templates"
 				}
 			]
 		}

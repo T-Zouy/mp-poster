@@ -2,7 +2,7 @@
   <div class="code-poster">
     <div class="btn-switch">
       <div class="left">一图一码</div>
-      <switch class="switch" checked="true" @change="handleSwitch"></switch>
+      <switch class="switch" @change="handleSwitch" />
     </div>
     <div class="text-notice first">
       1.开启一图一码时，每次调整后的海草报名将具有唯一性，不显示往期海报的报名数据。用户扫码进入，仍将看到对应的报名内容。
@@ -19,6 +19,9 @@
 <script>
   export default {
     name: 'code-poster',
+    data () {
+      return {}
+    },
     methods: {
       handleSwitch (event) {
         console.log(event)

@@ -3,17 +3,17 @@
     <div class="top-part-style" v-if="textEditType === 'style'">
       <div class="switch-item">
         <span>粗体</span>
-        <switch checked="styles.fontWeight === 'bold'"
+        <switch :checked="styles.fontWeight === 'bold'"
                 @change="changeFontWeight"/>
       </div>
       <div class="switch-item">
         <span>下划线</span>
-        <switch checked="styles.textDecoration === 'underline'"
+        <switch :checked="styles.textDecoration === 'underline'"
                 @change="changeTextDecoration"/>
       </div>
       <div class="switch-item">
         <span>阴影</span>
-        <switch checked="hasShadow"
+        <switch :checked="hasShadow"
                 @change="changeTextShadow"/>
       </div>
     </div>
@@ -62,6 +62,7 @@
     },
     data () {
       return {
+        tempStyles: {}, // 保存编辑前的状态
         styles: {},
         index: 0,
         type: ''
@@ -94,12 +95,14 @@
         this.saveEdit()
       },
       handleCancelSave () {
-        this.cancelSaveEdit({type: this.type, index: this.index, styles: this.styles})
+        this.cancelSaveEdit({type: this.type, index: this.index, styles: this.tempStyles})
       },
       updatePoster () {
         let temp = this.getEditModule()
-        console.log(temp)
-        this.styles = temp.module.style
+        this.tempStyles = {
+          ...temp.module.styles
+        }
+        this.styles = temp.module.styles
         this.index = temp.index
         this.type = temp.type
       },
@@ -109,6 +112,16 @@
       },
       handleChangeStyles (styles) {
         this.changeStyles({type: this.type, index: this.index, styles: styles})
+        this.styles = {
+          ...this.styles,
+          ...styles
+        }
+      },
+      changeInlineStyles (styles) {
+        this.styles = {
+          ...this.styles,
+          ...styles
+        }
       },
       changeFontWeight (event) {
         console.log(event)
@@ -135,9 +148,7 @@
         }
       },
       handleChangeOpacity (event) {
-        console.log(event)
         let temp = (100 - event.target.value) / 100
-        this.styles.opacity = temp
         this.handleChangeStyles({opacity: temp})
       }
     }

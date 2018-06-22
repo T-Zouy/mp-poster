@@ -1,5 +1,5 @@
 <template>
-    <img class="image" :class="[{'module-selected': disable}, calClass]"
+    <img class="image" :class="[{'module-selected': !disable}, calClass]"
          :style="{
                     top: styles.top + 'px',
                     left: styles.left + 'px',
@@ -29,7 +29,7 @@
       },
       disable: {
         type: Boolean,
-        default: false
+        default: true
       },
       src: {
         type: String,
@@ -68,7 +68,7 @@
         this.$emit('delete')
       },
       handleChange () {
-        if (!this.disable) {
+        if (this.disable) {
           this.$emit('select', {type: 'imageModules', index: this.index})
           return false
         }
@@ -82,7 +82,7 @@
       },
       moveModule (event) {
         event.preventDefault()
-        if (!this.disable) {
+        if (this.disable) {
           return false
         }
         this.end.x = event.clientX

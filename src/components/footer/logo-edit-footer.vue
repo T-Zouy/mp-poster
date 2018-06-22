@@ -3,7 +3,7 @@
     <div class="top-part" v-if="activeType === 'opacity'">
       <div class="opacity-text">透明度</div>
       <slider class="slider-image" @changing="handleChangeOpacity" step="2"
-              value="100" block-size="12"/>
+              :value="100 - styles.opacity * 100" block-size="12"/>
     </div>
     <div class="bottom-part">
       <i class="cancel iconfont icon-chacha" @click="handleCancelSave"></i>
@@ -23,6 +23,7 @@
     data () {
       return {
         activeType: '',
+        tempStyles: {}, // 用于存储编辑前的状态
         styles: {},
         index: 0,
         type: ''
@@ -30,6 +31,9 @@
     },
     beforeMount () {
       this.updatePoster()
+      this.tempStyles = {
+        ...this.styles
+      }
     },
     methods: {
       ...mapGetters({
@@ -46,12 +50,11 @@
         this.saveEdit()
       },
       handleCancelSave () {
-        this.cancelSaveEdit({type: this.type, index: this.index, styles: this.styles})
+        this.cancelSaveEdit({type: this.type, index: this.index, styles: this.tempStyles})
       },
       updatePoster () {
         let temp = this.getEditModule()
-        console.log(temp)
-        this.styles = temp.module.style
+        this.styles = temp.module.styles
         this.index = temp.index
         this.type = temp.type
       },
@@ -62,6 +65,7 @@
       handleChangeOpacity (event) {
         console.log(event)
         let temp = (100 - event.target.value) / 100
+        this.styles.opacity = temp
         this.changeStyles({ type: this.type, index: this.index, styles: {opacity: temp} })
       }
     }

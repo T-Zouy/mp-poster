@@ -8,7 +8,8 @@ import posterApi from '../../../api/poster'
 const MODULE_TYPE = {
   logoModules: 'logo',
   textModules: 'text',
-  imageModules: 'image'
+  imageModules: 'image',
+  qrCodeModules: 'qrcode'
 }
 
 const deselectModule = function (modules) {
@@ -18,7 +19,7 @@ const deselectModule = function (modules) {
       ...value,
       content: {
         ...content,
-        disable: false
+        disabled: true
       }
     }
   })
@@ -34,7 +35,8 @@ const state = {
   posterModules: {
     textModules: [],
     imageModules: [],
-    logoModules: []
+    logoModules: [],
+    qrCodeModules: []
   },
   // 正在编辑的组件
   editModule: {
@@ -50,6 +52,7 @@ const getters = {
   textModules: state => state.posterModules.textModules,
   imageModules: state => state.posterModules.imageModules,
   logoModules: state => state.posterModules.logoModules,
+  qrCodeModules: state => state.posterModules.qrCodeModules,
   editModule: state => {
     if (state.editModule.type === '') {
       return {
@@ -89,7 +92,6 @@ const actions = {
     if (res.status.code === 0) {
       commit('initPoster')
       commit('setPosterModules', res.data)
-      console.log(res.status.msg)
     } else {
       console.log(res.status.msg)
     }
@@ -119,8 +121,8 @@ const actions = {
     } else {
       let module = {
         src: path,
-        disable: true,
-        style: {
+        disabled: true,
+        styles: {
           top: 1,
           left: 1,
           width: width,
@@ -171,15 +173,22 @@ const mutations = {
   // 设置state内的数据
   setPosterModules (state, poster) {
     state.poster = poster
-    state.poster['template_module'].forEach(value => {
+    poster['template_module'].forEach(value => {
       let temp = value
-      temp.content = JSON.parse(temp.content)
+      try {
+        temp.content = JSON.parse(temp.content)
+      } catch (e) {
+        console.log(e)
+      }
       if (temp.type === 'text') {
         state.posterModules.textModules.push(temp)
       } else if (temp.type === 'image') {
         state.posterModules.imageModules.push(temp)
       } else if (temp.type === 'logo') {
         state.posterModules.logoModules.push(temp)
+      } else if (temp.type === 'qrcode') {
+        temp.content.src = poster['qr_code_url']
+        state.posterModules.qrCodeModules[0] = temp
       }
     })
     console.log(state.posterModules)
@@ -194,22 +203,22 @@ const mutations = {
     state.footerStatus = 'all'
     state.editModule.type = ''
     state.editModule.index = -1
-    state.posterModules.textModules = deselectModule(state.posterModules.textModules)
-    state.posterModules.imageModules = deselectModule(state.posterModules.imageModules)
-    state.posterModules.logoModules = deselectModule(state.posterModules.logoModules)
+    Object.keys(state.posterModules).forEach(value => {
+      state.posterModules[value] = deselectModule(state.posterModules[value])
+    })
   },
   // 选中组件
   enableModule (state, {type, index}) {
     console.log(type, index)
     state.editModule.type = type
     state.editModule.index = index
-    state.posterModules[type][index].content.disable = true
+    state.posterModules[type][index].content.disabled = false
   },
   // 修改样式
   changeStyles (state, {type, index, styles}) {
     console.log(type, index, styles)
-    state.posterModules[type][index]['content']['style'] = {
-      ...state.posterModules[type][index]['content']['style'],
+    state.posterModules[type][index]['content']['styles'] = {
+      ...state.posterModules[type][index]['content']['styles'],
       ...styles
     }
   },

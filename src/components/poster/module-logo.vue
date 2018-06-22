@@ -1,11 +1,12 @@
 <template>
-  <img class="module-logo" :class="[{'module-selected': disable}, calClass]"
+  <img class="module-logo" :class="[{'module-selected': !disable}, calClass]"
        :src="src" alt=""
        :style="{
           top: styles.top + 'px',
           left: styles.left + 'px',
           width: styles.width + 'px',
           height: styles.height + 'px',
+          opacity: styles.opacity,
           transform: calScale
         }" @click="handleClick"
        @touchstart="startMoveModule"
@@ -26,7 +27,8 @@
           left: 10,
           width: 200,
           height: 100,
-          scale: 1
+          scale: 1,
+          opacity: 1
         })
       },
       src: {
@@ -35,7 +37,7 @@
       },
       disable: {
         type: Boolean,
-        default: false
+        default: true
       },
       index: {
         type: Number,
@@ -67,7 +69,7 @@
         changeStyles: 'changeStyles'
       }),
       handleClick () {
-        if (!this.disable) {
+        if (this.disable) {
           this.$emit('select', {type: 'logoModules', index: this.index})
           return false
         }
@@ -79,7 +81,7 @@
       },
       moveModule (event) {
         event.preventDefault()
-        if (!this.disable) {
+        if (this.disable) {
           return false
         }
         this.end.x = event.clientX

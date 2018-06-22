@@ -2,7 +2,8 @@
   <div class="form-container">
     <div class="submit-title-edit" @click="handleAddOrEdit('title', 'edit')">
       <h1>{{formTitle.key_name}}</h1>
-      <i class="edit-icon"></i>
+      <i class="iconfont icon-edit edit-icon"></i>
+      <!-- <i class="edit-icon"></i> -->
     </div>
     <div class="submit-body-edit">
       <div
@@ -10,25 +11,25 @@
         :class="{ hasAllRadius: formBody.length === 1 }"
         v-for="(item, index) in formBody"
         :key="index">
-        <i class="delete-icon" @click="deleteOneLine(index)"></i>
+        <i class="iconfont icon-shanchu delete-icon" @click="deleteOneLine(index)"></i>
         <div class="submit-body-item-content">
           <label v-if="item.type === 'key'">{{item.key_name}}</label>
           <input placeholder="请输入" disabled/>
         </div>
-        <i class="edit-icon-body" @click="handleAddOrEdit('key', 'edit', index)"></i>
+        <i class="iconfont icon-edit edit-icon-body" @click="handleAddOrEdit('key', 'edit', index)"></i>
       </div>
     </div>
     <div class="submit-body-add" @click="handleAddOrEdit('key', 'add')">
-      <i></i>
+      <i class="iconfont icon-add add-icon"></i>
     </div>
     <div class="submit-button-edit" @click="handleAddOrEdit('submit-btn', 'edit')">
       <button class="submit-button">{{formButton.key_name}}</button>
-      <i class="edit-icon"></i>
+      <i class="iconfont icon-edit edit-icon"></i>
     </div>
     <div class="form-edit-footer">
-      <i class="cancle" @click="handleFormCancle"></i>
+      <i class="iconfont icon-chacha cancle" @click="handleFormCancle"></i>
       <span @click="handleFormPreview">预览表单</span>
-      <i class="save" @click="handleFormSave"></i>
+      <i class="iconfont icon-xiaogougou save" @click="handleFormSave"></i>
     </div>
   </div>
 </template>

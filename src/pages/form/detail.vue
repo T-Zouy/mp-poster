@@ -24,6 +24,7 @@
 <script>
   import { createNamespacedHelpers } from 'vuex'
   import { getFormDetail, handleSignup } from '@/api/create'
+  import posterApi from '@/api/poster'
   import { formFormat } from '@/utils/formFormat'
 
   const { mapState, mapMutations } = createNamespacedHelpers('form')
@@ -47,6 +48,21 @@
         deleteOneLine: 'handleFormDeleteOneLine',
         handleFormItemInit: 'handleFormItemInit'
       }),
+      // 判断报名是否被关闭
+      handlePosterStatus (templateId) {
+        posterApi.getPosterDetail(templateId).then(res => {
+          if (res.status.code === 0) {
+            if (res.data.is_stop === 0) {
+              this.handleFormEditDetailFetch(templateId)
+            } else {
+              this.$router.push({
+                path: '/pages/form/signup-close'
+              })
+            }
+          }
+        })
+      },
+      // 获取商家创建的表单详情
       handleFormEditDetailFetch (templateId) {
         const query = {
           template_id: templateId
@@ -107,6 +123,16 @@
             return item.value
           })
           if (isAccess) {
+            if (wx.getStorageSync('isSignup')) {
+              this.$router.push({
+                path: '/pages/form/signup-success'
+              })
+              wx.showToast({
+                title: '提交成功，请勿重复提交',
+                icon: 'none'
+              })
+              return
+            }
             console.log('提交')
             const customerDetail = await this.handleAuthSetting()
             const formItems = this.handleFormFormatBeforeApply(this.formBody)
@@ -115,10 +141,9 @@
               customer_data: customerDetail,
               customer_info_data: formItems
             }
-            console.log(query)
             handleSignup(query).then(res => {
-              console.log(res)
               if (res.status.code === 0) {
+                wx.setStorageSync('isSignup', true)
                 this.$router.push({
                   path: '/pages/form/signup-success'
                 })
@@ -131,20 +156,24 @@
             })
           }
         }
+      },
+
+      init () {
+        const { type, posterId } = this.$route.query
+        if (type && type === 'preview') {
+          console.log('预览')
+          this.status = 'preview'
+        } else {
+          console.log('报名')
+          this.status = 'signup'
+          this.posterId = posterId
+          this.handlePosterStatus(posterId)
+        }
       }
     },
 
-    mounted () {
-      const { type, posterId } = this.$route.query
-      if (type && type === 'preview') {
-        console.log('预览')
-        this.status = 'preview'
-      } else {
-        console.log('报名')
-        this.status = 'signup'
-        this.posterId = posterId
-        this.handleFormEditDetailFetch(posterId)
-      }
+    onShow () {
+      this.init()
     }
   }
 </script>

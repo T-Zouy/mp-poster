@@ -23,6 +23,8 @@ function getLoginQuery () {
     wx.getUserInfo({
       success: (res) => {
         const userInfo = res.userInfo
+        const encryptedData = res.encryptedData
+        const iv = res.iv
         wx.login({
           success: (loginMsg) => {
             let query
@@ -35,7 +37,9 @@ function getLoginQuery () {
                 city: userInfo.city,
                 province: userInfo.province,
                 country: userInfo.country,
-                scene: ''
+                scene: '',
+                encryptedData,
+                iv
               }
               resolve(query)
             } else {

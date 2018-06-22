@@ -3,5 +3,5 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  BASE_URL: '"https://dev.haicaoyun.com"'
+  BASE_URL: '"https://dev.haicaoyun.com"',
 })

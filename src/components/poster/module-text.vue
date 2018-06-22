@@ -1,5 +1,5 @@
 <template>
-    <div class="text" :class="[{'module-selected': disable}, calClass]"
+    <div class="text" :class="[{'module-selected': !disable}, calClass]"
          @click="handleInput"
          @touchstart="startMoveModule"
          @touchmove="moveModule"
@@ -50,7 +50,7 @@
       },
       disable: {
         type: Boolean,
-        default: false
+        default: true
       },
       index: {
         type: Number
@@ -81,7 +81,7 @@
         changeStyles: 'changeStyles'
       }),
       handleInput () {
-        if (!this.disable) {
+        if (this.disable) {
           console.log('click')
           this.$emit('select', { type: 'textModules', index: this.index })
           return false
@@ -98,7 +98,7 @@
       },
       moveModule (event) {
         event.preventDefault()
-        if (!this.disable) {
+        if (this.disable) {
           return false
         }
         this.end.x = event.clientX

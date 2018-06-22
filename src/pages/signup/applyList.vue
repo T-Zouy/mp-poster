@@ -9,9 +9,10 @@
         </tr>
         <tr class="sections" v-for="(item, i) in applyCustomerList" :key="item.id">
           <td class="sections-item user">
-            <img class="user-icon" :src="item.avatarUrl" alt="user-icon">
-            <span class="username">{{item.nickName}}</span>
-            <i></i>
+            <img v-if="item.nickName" class="user-icon" :src="item.avatarUrl" alt="user-icon">
+            <img v-else class="user-icon no-auth" src="../../assets/img/user.png" alt="user-icon">
+            <span class="username" :style="{color: item.nickName ? '#000' : '#ccc' }">{{item.nickName ? item.nickName : '未授权'}}</span>
+            <i class="iconfont icon-user icon-sex" :class="{ male: item.gender === 1, felmale: item.gender === 0 }"></i>
           </td>
           <td class="sections-item"
             v-for="(detail, j) in item.customer_info"
@@ -48,8 +49,7 @@
           data: word,
           success: () => {
             wx.showToast({
-              title: '复制成功',
-              icon: 'none'
+              title: '复制成功'
             })
           }
         })
@@ -73,14 +73,18 @@
           per_page: 500
         }
         getApplyCustomerList(query).then(res => {
-          console.log(res)
           if (res.status.code === 0) {
             // 动态设置table的width属性
-            const customerNum = res.data.list ? `（${res.data.list.length}）` : ''
-            const formFieldsNum = res.data.from_fields ? res.data.from_fields.length : 0
-            this.tableWidth = formFieldsNum ? (formFieldsNum + 2) * 150 + 'px' : '0px'
-            this.fromFields = res.data.from_fields
-            this.applyCustomerList = res.data.list.map(item => this.handleFormListData(item))
+            const customerNum = res.data.list ? `（${res.data.list.length}）` : '（0）'
+            const formFieldsNum = res.data.from_fields ? res.data.from_fields.length : 2
+            this.tableWidth = (formFieldsNum + 2) * 150 + 'px'
+            if (res.data.from_fields && res.data.from_fields.length) {
+              this.fromFields = res.data.from_fields
+              this.applyCustomerList = res.data.list.map(item => this.handleFormListData(item))
+            } else {
+              this.fromFields = []
+              this.applyCustomerList = []
+            }
             wx.setNavigationBarTitle({
               title: `报名数据${customerNum}`
             })
@@ -144,8 +148,19 @@
           border-radius: 4px;
         }
         .username {
+          display: inline-block;
+          max-width: 64px;
           padding: 0 5px;
-        } 
+        }
+        .icon-sex {
+          font-size: 14px;
+        }
+        .male {
+          color: #5DCFF3;
+        }
+        .female {
+          color: #F3AA5D;
+        }
       }
       .time {
         font-size: 12px;

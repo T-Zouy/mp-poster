@@ -21,7 +21,7 @@ request.interceptors.response.use(
     if (response.data.status.code === 4001) {
       wx.getSetting({
         success: (res) => {
-          if (res.authSetting['scope.userInfo']) {
+          if (res.authSetting['scope.userInfo'] && wx.getStorageSync('scene')) {
             wx.showModal({
               title: '提示',
               content: '登陆过期，请重新登陆',

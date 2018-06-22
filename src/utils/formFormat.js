@@ -57,6 +57,11 @@ export function formFormat (res) {
 }
 
 export function handleDateShow (date) {
+  const hour = dayjs(date).hour() > 12
+    ? `下午0${dayjs(date).hour() - 12}`
+    : dayjs(date).hour() > 9
+      ? `上午${dayjs(date).hour()}`
+      : `上午0${dayjs(date).hour()}`
   const minute = dayjs(date).minute() > 10 ? dayjs(date).minute() : `0${dayjs(date).minute()}`
-  return `${dayjs(date).month()}月${dayjs(date).date()}日 下午${dayjs(date).hour()}:${minute}`
+  return `${dayjs(date).month()}月${dayjs(date).date()}日 ${hour}:${minute}`
 }

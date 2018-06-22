@@ -4,20 +4,25 @@
       <!--背景-->
       <img class="bg-img" :src="bgUrl" alt=""
            @click="deselectAll">
+      <!--二维码组件-->
+      <v-qr-code v-for="(qrCode, index) in qrCodeModules" :key="index"
+                 :styles="qrCode.content.styles" :src="qrCode.content.src"
+                 :disable="qrCode.content.disabled" :index="index"
+                 @select="selectModule"></v-qr-code>
       <!--logo组件-->
       <v-logo v-for="(logoModule, index) in logoModules" :key="index"
-              :styles="logoModule.content.style" :src="logoModule.content.src"
-              :disable="logoModule.content.disable" :index="index"
+              :styles="logoModule.content.styles" :src="logoModule.content.src"
+              :disable="logoModule.content.disabled" :index="index"
               @select="selectModule"></v-logo>
       <!--文本组件-->
       <v-text v-for="(textModule, index) in textModules" :key="index"
-              :styles="textModule.content.style" :text="textModule.content.text"
-              :disable="textModule.content.disable" :index="index"
+              :styles="textModule.content.styles" :text="textModule.content.text"
+              :disable="textModule.content.disabled" :index="index"
               @select="selectModule"></v-text>
       <!--图片组件-->
       <v-image v-for="(imageModule, index) in imageModules" :key="index"
-               :styles="imageModule.content.style" :src="imageModule.content.src"
-               :disable="imageModule.content.disable" :index="index"
+               :styles="imageModule.content.styles" :src="imageModule.content.src"
+               :disable="imageModule.content.disabled" :index="index"
                @select="selectModule"></v-image>
       <i v-show="isShowEdit" class="delete iconfont icon-chacha"
               :style="{left: deleteBtnStyle.left + 'px',
@@ -45,11 +50,14 @@
   import ModuleText from '../../components/poster/module-text'
   import ModuleImage from '../../components/poster/module-image'
   import ModuleLogo from '../../components/poster/module-logo'
+  import ModuleQrCode from '../../components/poster/module-qrcode'
   import wxElement from '../../wxApi/element'
+  import wxInterface from '../../wxApi/interface'
+  import wxMedia from '../../wxApi/media'
   import {mapGetters, mapActions, mapMutations} from 'vuex'
 
   const EDIT = {
-    'background': function () {
+    'background': async function () {
       wx.showActionSheet({
         itemList: ['高清图库', '从相册选择'],
         success: res => {
@@ -100,7 +108,6 @@
     },
     'save': function () {
       console.error('save')
-      console.log(this)
     }
   }
   export default {
@@ -145,7 +152,8 @@
       'v-logo-edit': LogoEditFooter,
       'v-text': ModuleText,
       'v-image': ModuleImage,
-      'v-logo': ModuleLogo
+      'v-logo': ModuleLogo,
+      'v-qr-code': ModuleQrCode
     },
     computed: {
       ...mapGetters([
@@ -156,24 +164,27 @@
         'textModules',
         'imageModules',
         'logoModules',
+        'qrCodeModules',
         'editModule'
       ]),
       isShowEdit () {
-        if (this.editModuleInfo.type === '') {
-          return false
-        } else {
-          return true
-        }
+        let type = this.editModuleInfo.type
+        return type !== '' && type !== 'qrCodeModules'
       }
     },
     watch: {
       editModule: {
         deep: true,
         handler: function (now, previous) {
+          console.log(now)
           this.editModuleInfo = now
           this.updateEditButtonBound()
           if (this.editModuleInfo.type !== '') {
-            this.radius = this.getRadius(this.editModuleInfo.module.style.width, this.editModuleInfo.module.style.height)
+            try {
+              this.radius = this.getRadius(this.editModuleInfo.module.styles.width, this.editModuleInfo.module.styles.height)
+            } catch (e) {
+              console.log(e)
+            }
           }
         }
       }
@@ -183,7 +194,6 @@
         this.posterBound.top = rect.top
         this.posterBound.left = rect.left
       })
-      this.getPosterTemplate()
     },
     methods: {
       ...mapActions([
@@ -214,7 +224,6 @@
       },
       updateEditButtonBound () {
         let className = `.${this.editModuleInfo.type}${this.editModuleInfo.index}`
-        console.log(className)
         wxElement.getElementBound(className).then(rect => {
           this.deleteBtnStyle.top = rect.top - 8
           this.deleteBtnStyle.left = rect.left - 8 - this.posterBound.left
@@ -224,7 +233,6 @@
       },
       scaleTouchStart (event) {
         event.preventDefault()
-        console.log(event)
         this.start.x = event.clientX
         this.start.y = event.clientY
         // console.log(event.clientX, event.clientY)
@@ -237,7 +245,7 @@
         // 获取滑动距离
         let distanceX = this.end.x - this.start.x + this.scale.x
         let distanceY = this.end.y - this.start.y + this.scale.y
-        let tempScale = this.getDistance(this.editModuleInfo.module.style.width, this.editModuleInfo.module.style.height, distanceX, distanceY) / this.radius
+        let tempScale = this.getDistance(this.editModuleInfo.module.styles.width, this.editModuleInfo.module.styles.height, distanceX, distanceY) / this.radius
         this.changeStyles({ ...this.editModuleInfo, styles: { scale: tempScale } })
         this.updateEditButtonBound()
       },

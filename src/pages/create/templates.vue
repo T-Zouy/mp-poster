@@ -6,7 +6,7 @@
       </swiper-item>
     </swiper>
     <div class="auth-box" @click="goToTempDetail">
-      <button class="auth-btn" open-type="getUserInfo" @getuserinfo="bindGetUserInfo"></button> 
+      <button class="auth-btn" open-type="getUserInfo" @getuserinfo="bindGetUserInfo"></button>
       <i class="use-temp-icon"></i>
       <p class="use-temp-text">立即使用</p>
     </div>
@@ -16,6 +16,7 @@
 <script>
   import { getTempList, createPosters } from '../../api/create'
   import { login } from '../../api/login'
+  import {mapActions} from 'vuex'
   import UTILS from '../../utils'
   export default {
     data () {
@@ -26,12 +27,16 @@
     },
 
     methods: {
+      ...mapActions([
+        'getPosterTemplate'
+      ]),
       handleSwiperChange (event) {
         console.log(event)
         const currentIndex = event.target.current
         this.currentTempId = this.tempLists[currentIndex].id
       },
       handleCreatePoster (scene) {
+        this.getPosterTemplate()
         createPosters({
           scene,
           template_id: this.currentTempId
